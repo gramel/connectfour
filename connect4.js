@@ -44,6 +44,7 @@ function makeHtmlBoard() {
   for (let x = 0; x < WIDTH; x++) {
     let headCell = document.createElement('td');
     headCell.setAttribute('id', x);
+    headCell.setAttribute('class', 'headCell');
     top.append(headCell);
   }
   //appends the top row to the boardHtml
@@ -56,7 +57,7 @@ function makeHtmlBoard() {
     //this adds the cols to each row for the boardHTML
     for (let x = 0; x < WIDTH; x++) {
       let boardCell = document.createElement('td');
-      boardCell.setAttribute('id', `${y}-${x}`);
+      boardCell.setAttribute('id', `cell ${y}-${x}`);
       row.append(boardCell);
     }
     //appends each row to the board
@@ -68,6 +69,11 @@ function makeHtmlBoard() {
 
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
+  for (let possibleRow = board.length - 1; possibleRow >= 0; possibleRow--) {
+    if (board[possibleRow][x] !== 1 && board[possibleRow][x] !== 2) {
+      return possibleRow;
+    }
+  }
 }
 
 /** placeInTable: update DOM to place piece into HTML board */
@@ -75,9 +81,12 @@ function findSpotForCol(x) {
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
   let piece = document.createElement('div');
-  piece.setAttribute('class', 'piece');
-  piece.setAttribute('class', `p${currPlayer}`);
-  let destination = document.getElementById(`${y}-${x}`);
+  piece.setAttribute('class', `piece p${currPlayer}`);
+
+  board[y][x] = currPlayer;
+
+  //find the lowest possible cell
+  let destination = document.getElementById(`cell ${y}-${x}`);
   destination.append(piece);
 }
 
@@ -85,6 +94,7 @@ function placeInTable(y, x) {
 
 function endGame(msg) {
   // TODO: pop up alert message
+  alert(msg);
 }
 
 /** handleClick: handle click of column top to play piece */
@@ -106,6 +116,13 @@ function handleClick(evt) {
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
 
+  let boardFilled = board[0].every(function(val) {
+    return val === 1 || val === 2;
+  });
+  if (boardFilled) {
+    endGame('It is a tie!');
+  }
+
   // check for win
   if (checkForWin()) {
     return endGame(`Player ${currPlayer} won!`);
@@ -113,6 +130,7 @@ function handleClick(evt) {
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
+  currPlayer == 1 ? (currPlayer = 2) : (currPlayer = 1);
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
