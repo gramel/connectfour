@@ -4,11 +4,6 @@ td {
   width: 50px;
   height: 50px;
   border: solid 1px black;
-  position: absolute;
-}
-
-.board {
-  position: absolute;
 }
 
 /* pieces are div within game table cells: draw as colored circles */
@@ -19,12 +14,16 @@ td {
   width: 80%;
   height: 80%;
   border-radius: 50px;
-  position: absolute;
-  transition: top 0.6s;
+  animation: drop 2s linear;
 }
 
-.headCell:click .piece {
-  top: 0;
+@keyframes drop {
+  0% {
+    transform: translate(0, -300px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
 }
 
 .p1 {
